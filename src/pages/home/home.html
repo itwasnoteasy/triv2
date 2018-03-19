@@ -1,14 +1,18 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+    <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
+  <ion-item>
+    <ion-avatar item-left>
+      <img src="{{user?.image}}" />
+    </ion-avatar>
+    <p>{{ user?.email }}</p>
+  </ion-item>
   <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
+    This starter project comes with simple authentication from Facebook or Google.
   </p>
+  <button (click)="logout()" ion-button>Logout</button>
 </ion-content>
