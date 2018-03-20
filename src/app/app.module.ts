@@ -23,6 +23,7 @@ import { AuthProvider } from '../providers/auth';
 import { AngularFireDatabaseModule, AngularFireDatabaseProvider } from 'angularfire2/database';
 import { AngularFireAuthModule, AngularFireAuthProvider } from 'angularfire2/auth';
 import { GooglePlus } from '@ionic-native/google-plus';
+import { AboutPage } from '../pages/about/about';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyB_pdGDEb7OuerjJT2gffoIOstB-Yv9HLY",
@@ -36,6 +37,7 @@ export const firebaseConfig = {
   declarations: [
     MyApp,
     HomePage,
+    AboutPage,
     ForgotPasswordPage,
     AuthPage,
     LoginEmailPage,
@@ -54,6 +56,7 @@ export const firebaseConfig = {
   entryComponents: [
     MyApp,
     HomePage,
+    AboutPage,
     ForgotPasswordPage,
     AuthPage,
     LoginEmailPage,

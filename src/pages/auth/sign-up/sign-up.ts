@@ -1,9 +1,6 @@
 import { NavController, LoadingController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { LoginEmailPage } from '../login-email/login-email';
-import { AuthProvider } from '../../../providers/auth';
-
-import { HomePage } from '../../home/home';
 
 @Component({
   templateUrl: 'sign-up.html',
@@ -15,7 +12,6 @@ export class SignUpPage {
   form: any;
 
   constructor(private navCtrl: NavController,
-    private auth: AuthProvider,
     private loadingCtrl: LoadingController,
   ) {
     this.form = {

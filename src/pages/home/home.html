@@ -1,18 +1,46 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Trivia Party!
+      <span style="float:right;">
+        <ion-item style="background-color:transparent">
+          <ion-avatar >
+            <img src="{{userInfo?.image}}" />
+          </ion-avatar>
+        </ion-item>
+      </span>
+    </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-avatar item-left>
-      <img src="{{user?.image}}" />
-    </ion-avatar>
-    <p>{{ user?.email }}</p>
-  </ion-item>
-  <p>
-    This starter project comes with simple authentication from Facebook or Google.
-  </p>
-  <button (click)="logout()" ion-button>Logout</button>
+    
+  <ion-item [class.hide]="!isEliminated"><h5 style="float:right;background-color:red;color:white;">ELIMINATED</h5></ion-item>
+    <h1>{{ (currentQuestion | async) }}</h1>
+    <ion-list>
+      <ng-container *ngFor="let option of currentOptions | async;let i = index">
+        <button id="{{option}}" ion-button large round 
+        [outline]="olProps[i]" 
+        [color] = "chosenColor[i]"
+        [disabled]="disabledProp || isLate || isEliminated" style="width:100%" 
+        (click)="chosen(i, currentQuestionIdVal);">
+          {{option}} <span [class.hide]="!displaySelectionCount">
+            &nbsp;&nbsp;({{this.optionSelectedCount[i]}})</span></button>
+      </ng-container>
+    </ion-list>
+    <div text-center *ngIf="currentQuestionIdVal > 0">
+        <progress value="{{tick}}" max="10" id="progressBar"></progress>
+      </div>
+    <ng-container *ngIf="isHost">
+        <div text-center *ngIf="currentQuestionIdVal > 0">
+          <button ion-button round (click)="nextQuestion()" [disabled]="!displaySelectionCount">Next Question</button>
+        </div>
+        <div text-center *ngIf="currentQuestionIdVal == 0">
+          <button ion-button round (click)="nextQuestion()">Start Game</button>
+        </div>
+    </ng-container>
+    <div [class.hide]="!checkStatus" class="radial-timer s-animate circle-center">
+      <div class="radial-timer-half"></div>
+      <div class="radial-timer-half"></div>
+    </div>
+  <!--<button (click)="logout()" ion-button>Logout</button>-->
 </ion-content>

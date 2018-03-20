@@ -2,7 +2,6 @@ import { NavController, LoadingController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { ForgotPasswordPage } from '../forgot-password/forgot-password';
 import { SignUpPage } from '../sign-up/sign-up';
-import { AuthProvider } from '../../../providers/auth';
 
 @Component({
   templateUrl: 'login-email.html',
@@ -13,7 +12,7 @@ export class LoginEmailPage {
   error: any;
   form: any;
 
-  constructor(private navCtrl: NavController, private auth: AuthProvider,
+  constructor(private navCtrl: NavController,
     private loadingCtrl: LoadingController
   ) {
     this.form = {

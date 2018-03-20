@@ -56,7 +56,6 @@ export class AuthProvider {
       } else {
         const provider = new firebase.auth.GoogleAuthProvider();
         this.afAuth.auth.signInWithPopup(provider).then((googleData) => {
-          var x = googleData;
           this.afDb.list('users').update(googleData.user.uid, {
             name: googleData.user.displayName,
             email: googleData.user.email,

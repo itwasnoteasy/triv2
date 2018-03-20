@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Join or Host
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <button *ngIf="isHosting" ion-button large full round (click)="join()">Join</button>
+  <ion-item *ngIf="!isHosting">
+    <ion-label color="primary" stacked>Host Email address</ion-label>
+    <ion-input type="email" [(ngModel)]="hostEmailAddress" [ngModelOptions]="{standalone: true}" placeholder="Email address"></ion-input>
+    <button ion-button type="submit" item-right (click)="hostMode(false)">Join</button>
+  </ion-item>
+  
+  <button ion-button large full round color="dark" (click)="hostMode(true)">Host New Game</button>
+</ion-content>

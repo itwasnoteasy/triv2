@@ -6,7 +6,7 @@ import { SignUpPage } from '../sign-up/sign-up';
 import { TermsOfServicePage } from '../../terms-of-service/terms-of-service';
 import { AuthProvider } from '../../../providers/auth';
 
-import { HomePage } from '../../home/home';
+import { AboutPage } from '../../about/about';
 
 @Component({
   templateUrl: 'home.html',
@@ -57,7 +57,7 @@ export class AuthPage {
       }
       console.log(this.auth.user);
       console.log('setting tabs page');
-      this.navCtrl.setRoot(HomePage);
+      this.navCtrl.setRoot(AboutPage);
     }, err => {
       this.error = err;
     });

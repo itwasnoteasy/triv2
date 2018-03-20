@@ -3,17 +3,17 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { HomePage } from '../pages/home/home';
 import { AuthPage } from '../pages/auth/home/home';
 
 import { DataProvider } from '../providers/data';
 import { AuthProvider } from '../providers/auth';
+import { AboutPage } from '../pages/about/about';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = HomePage;
+  rootPage:any = AboutPage;
   user: any;
   isAppInitialized: boolean = false;
 

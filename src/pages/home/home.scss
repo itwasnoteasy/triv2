@@ -1,3 +1,111 @@
 page-home {
-
-}
+  .list .item-avatar.list-purple {
+    color: #FFF;
+    background-color: #b31f6f;  
+  }
+    button-balanced:active,
+    button-balanced:focus
+    {
+     border:1.5em solid #00c; /* here change your border */
+     
+    }
+    
+    $background: #fff;
+    
+    // Basic layout
+    html {
+      background: $background;
+      text-align: center;
+      padding-top: 36px;
+    }
+    body {
+      display: inline-block;
+    }
+    
+    .google-btn {
+      background-color: #d34836;
+      margin: auto;
+      width: 95%;
+      margin-bottom: 5px;
+    }
+    
+    .radial-timer {
+      // CONFIG
+      $size: 144px;
+      $thickness: 9px;
+      $duration: 10s;
+      $color: green;
+      
+      overflow: hidden;
+      height: $size;
+      width: $size;
+      position: relative;
+      
+      .radial-timer-half {
+        height: $size;
+        width: $size/2;
+        border-radius: $size/2 0 0 $size/2;
+        background: $color;
+        position: absolute;
+        &:nth-of-type(2) {
+          z-index: 99999999;
+          -webkit-transform-origin: center right;
+          -webkit-transform: rotate(180deg);
+        }
+        
+        &:before {
+          content: "";
+          position: absolute;
+          top: $thickness;
+          left: $thickness;
+          height: $size - 2*$thickness;
+          width: ($size - 2*$thickness)/2;
+          border-radius: ($size - $thickness)/2 0 0 ($size - $thickness)/2;
+          background: $background;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          background: $background;
+          height: $size*2;
+          width: $size*1.5;
+          left: -$size;
+          top: -$size/2;
+          -webkit-transform-origin: center right;
+        }
+      }
+      
+      &.s-animate {
+        -webkit-transform-origin: center right;
+        .radial-timer-half:nth-of-type(1):after {
+          -webkit-animation: rotateLeftMask $duration infinite linear;
+        }
+        .radial-timer-half:nth-of-type(2):after {
+          -webkit-animation: rotateRightMask $duration infinite linear;
+        }
+      }
+    }
+    
+    // Animations
+    
+    @-webkit-keyframes rotateLeftMask {
+      0%   { -webkit-transform: rotate(0deg); }
+      50%   { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(180deg); }
+    }
+    @-webkit-keyframes rotateRightMask {
+      0%   { -webkit-transform: rotate(0deg); }
+      50%   { -webkit-transform: rotate(180deg); visibility: hidden; }
+      100% { -webkit-transform: rotate(180deg); visibility: hidden; }
+    }
+    .circle-center {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+    .hide {
+        display: none;
+      }
+    }
+    
+    
