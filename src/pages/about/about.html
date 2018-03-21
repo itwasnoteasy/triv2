@@ -1,12 +1,23 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Join or Host
+      Party Games
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+
+    <button ion-button block class="facebook-btn" (click)="loginUserWithFacebook()">
+        <ion-icon name="logo-facebook"></ion-icon>
+        &nbsp;Log In with Facebook
+      </button>
+    
+      <button ion-button block class="google-btn" (click)="loginUserWithGoogle()">
+        <ion-icon name="logo-google"></ion-icon>
+        &nbsp;Log In with Google
+      </button>
+
   <button *ngIf="isHosting" ion-button large full round (click)="join()">Join</button>
   <ion-item *ngIf="!isHosting">
     <ion-label color="primary" stacked>Host Email address</ion-label>

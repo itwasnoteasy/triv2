@@ -1,21 +1,14 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Trivia Party!
-      <span style="float:right;">
-        <ion-item style="background-color:transparent">
-          <ion-avatar >
-            <img src="{{userInfo?.image}}" />
-          </ion-avatar>
-        </ion-item>
-      </span>
-    </ion-title>
-  </ion-navbar>
-</ion-header>
-
 <ion-content padding>
-    
-  <ion-item [class.hide]="!isEliminated"><h5 style="float:right;background-color:red;color:white;">ELIMINATED</h5></ion-item>
+    <ion-item no-lines><!-- here -->
+      <ion-avatar item-left>
+          <img [src]="userInfo?.image" class="img img-circle"/>
+      </ion-avatar>
+      {{userInfo.displayName}}
+      <h4 [class.hide]="!isEliminated" style="float:right;background-color:red;color:white;">ELIMINATED</h4>
+  </ion-item>
+  <ion-item text-center >
     <h1>{{ (currentQuestion | async) }}</h1>
+  </ion-item>  
     <ion-list>
       <ng-container *ngFor="let option of currentOptions | async;let i = index">
         <button id="{{option}}" ion-button large round 
