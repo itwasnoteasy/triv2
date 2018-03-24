@@ -3,11 +3,11 @@
       <ion-avatar item-left>
           <img [src]="userInfo?.image" class="img img-circle"/>
       </ion-avatar>
-      {{userInfo.displayName}}
+      {{userInfo.email}}
       <h4 [class.hide]="!isEliminated" style="float:right;background-color:red;color:white;">ELIMINATED</h4>
   </ion-item>
   <ion-item text-center >
-    <h1>{{ (currentQuestion | async) }}</h1>
+    <h1 class="item-text-wrap">{{ (currentQuestion | async) }}</h1>
   </ion-item>  
     <ion-list>
       <ng-container *ngFor="let option of currentOptions | async;let i = index">
@@ -21,19 +21,26 @@
       </ng-container>
     </ion-list>
     <div text-center *ngIf="currentQuestionIdVal > 0">
-        <progress value="{{tick}}" max="10" id="progressBar"></progress>
-      </div>
+      <progress value="{{tick}}" max="10" id="progressBar"></progress>
+    </div>
     <ng-container *ngIf="isHost">
-        <div text-center *ngIf="currentQuestionIdVal > 0">
+        <div text-center *ngIf="currentQuestionIdVal > 0 && !isGameEnded">
           <button ion-button round (click)="nextQuestion()" [disabled]="!displaySelectionCount">Next Question</button>
         </div>
         <div text-center *ngIf="currentQuestionIdVal == 0">
-          <button ion-button round (click)="nextQuestion()">Start Game</button>
+            <button color="danger" ion-button block class="btn" (click)="nextQuestion()">
+                &nbsp;Start Game
+              </button>
         </div>
     </ng-container>
     <div [class.hide]="!checkStatus" class="radial-timer s-animate circle-center">
       <div class="radial-timer-half"></div>
       <div class="radial-timer-half"></div>
     </div>
+
+      <div [class.hide]="!isGameEnded">
+        We have a winner: {{winner}}
+      </div>
+
   <!--<button (click)="logout()" ion-button>Logout</button>-->
 </ion-content>

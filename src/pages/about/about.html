@@ -1,29 +1,21 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Party Games
-    </ion-title>
-  </ion-navbar>
-</ion-header>
-
 <ion-content padding>
 
-    <button ion-button block class="facebook-btn" (click)="loginUserWithFacebook()">
-        <ion-icon name="logo-facebook"></ion-icon>
-        &nbsp;Log In with Facebook
-      </button>
-    
-      <button ion-button block class="google-btn" (click)="loginUserWithGoogle()">
-        <ion-icon name="logo-google"></ion-icon>
-        &nbsp;Log In with Google
-      </button>
-
-  <button *ngIf="isHosting" ion-button large full round (click)="join()">Join</button>
+  <button *ngIf="isHosting" ion-button block class="btn" (click)="join()">
+    &nbsp;Join
+  </button>
   <ion-item *ngIf="!isHosting">
-    <ion-label color="primary" stacked>Host Email address</ion-label>
-    <ion-input type="email" [(ngModel)]="hostEmailAddress" [ngModelOptions]="{standalone: true}" placeholder="Email address"></ion-input>
-    <button ion-button type="submit" item-right (click)="hostMode(false)">Join</button>
+    <ion-label color="{{hostLabelColor}}" stacked>Host Email address</ion-label>
+    <ion-input type="email" [(ngModel)]="hostEmailAddress" 
+    [ngModelOptions]="{standalone: true}" placeholder="Email address"></ion-input>
   </ion-item>
-  
-  <button ion-button large full round color="dark" (click)="hostMode(true)">Host New Game</button>
+  <ng-container *ngIf="!isHosting">
+      <button color="dark" ion-button block class="btn" (click)="hostMode(false)">
+          &nbsp;Join
+        </button>
+  </ng-container>
+
+  <button *ngIf="isHosting" color="dark" ion-button block class="btn" (click)="hostMode(true)">
+    &nbsp;Host New Game
+  </button>
+
 </ion-content>

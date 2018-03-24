@@ -21,7 +21,7 @@ export class AuthPage {
     private platform: Platform) { }
 
   ngOnInit() {
-
+      console.log('AuthPage..')
   }
 
   openSignUpPage() {

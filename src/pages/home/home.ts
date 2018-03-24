@@ -34,6 +34,7 @@ export class HomePage {
   private isLate: boolean = false;
   private isEliminated: boolean = false;
   private isQuestionEnded: boolean = false;
+  private isGameEnded: boolean = false;
   private winner: string;
   constructor(public navCtrl: NavController,
     public auth: AuthProvider,
@@ -42,19 +43,14 @@ export class HomePage {
     private alertCtrl: AlertController,
   ) {
     this.userInfo = auth.user;
-    console.log(auth.user);
+    // console.log(auth.user);
     this.isHost = this.navParams.get('data');
     if(!this.isHost) {
       this.hostUserEmail = this.navParams.get('hostEmail');
-      console.log(this.hostUserEmail);
+      // console.log(this.hostUserEmail);
       this.hostUserEmail = this.hostUserEmail.replace('@','at');
       this.hostUserEmail = this.hostUserEmail.replace('.','dot');
     }
-
-    this.afDatabase.object(this.hostUserEmail + 'Game/winner')
-    .valueChanges().subscribe((winner: string) => {
-      this.winner = winner;
-    });  
 
     if (this.userInfo !== null && this.userInfo !== undefined) {
       this.uniqueUserEmail = this.userInfo.email.replace('@', 'at');
@@ -65,7 +61,19 @@ export class HomePage {
         // Game has begun so clear out all the values and set question = 0
         this.afDatabase.object('hostUsers/' + this.hostUserEmail + '/currentQuestionId').set(0);
         this.afDatabase.object(this.hostUserEmail + 'Game/').set('');
+        this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded').set(this.isGameEnded);
       }
+
+      this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded')
+        .valueChanges().subscribe((isGameEnded: boolean) => {
+          this.isGameEnded = isGameEnded;
+        });
+
+      this.afDatabase.object(this.hostUserEmail + 'Game/winner')
+        .valueChanges().subscribe((winner: string) => {
+          this.winner = winner;
+        }); 
+
       this.currentQuestionId = this.afDatabase.object('hostUsers/' + this.hostUserEmail + '/currentQuestionId').valueChanges();
       this.currentQuestionId.subscribe(((cv: number) => {
         if (cv != this.currentQuestionIdVal) {
@@ -118,15 +126,9 @@ export class HomePage {
 
             // take 1 second extra time to show the results for any latency factor.
             setTimeout(() => {
-              console.log('11 seconds');
               this.countAnswers();
               this.setElimination();
             }, 11000);
-
-            setTimeout(() => {
-              console.log('12 seconds');
-              this.displayResultForQuestion()
-            }, 12000);
           }
         }
       }));
@@ -153,6 +155,8 @@ export class HomePage {
         this.chosenColor[this.chosenOption] = 'secondary';
         if(this.optionSelectedCount[this.answer-1] == 1) {
           this.afDatabase.object(this.hostUserEmail + 'Game/winner').set(this.uniqueUserEmail);
+          this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded').set(true);
+          this.isGameEnded = true;
         }
       } else {
         this.chosenColor[this.chosenOption] = 'danger';
@@ -162,14 +166,13 @@ export class HomePage {
     } else if(!this.isEliminated){
       this.isEliminated = true;
       this.afDatabase.object(this.hostUserEmail + 'Game/' + this.uniqueUserEmail + '/isEliminated').set(true);
+    }  
+    // If everyone is eliminated
+    if(this.optionSelectedCount[this.answer-1] == 0 && this.isHost) {
+        this.afDatabase.object(this.hostUserEmail + 'Game/winner').set('No Winners');
+        this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded').set(true);
     }
     this.displaySelectionCount = true;
-  }
-
-  private displayResultForQuestion() {
-    if(this.winner !== null && this.winner !== undefined) {
-      this.presentAlert('We have a winner:'+this.winner);
-    }
   }
 
   private countAnswers() {
@@ -178,7 +181,7 @@ export class HomePage {
         var gameAnswers = this.gameAnswers.payload.val();
         this.totalPlayers = this.gameAnswers.payload.numChildren();
         Object.keys(gameAnswers).forEach(key => {
-          if (key !== 'isLate' && key !== 'winner' && key !== 'isQuestionEnded') {
+          if (key !== 'isLate' && key !== 'winner' && key !== 'isQuestionEnded' && key !== 'isGameEnded') {
             this.optionSelectedCount[(gameAnswers[key][this.currentQuestionIdVal] - 1)] += 1;
           }
         });

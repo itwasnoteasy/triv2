@@ -1,3 +1,37 @@
 page-about {
+    background-position-y: 50%;
+    .facebook-btn {
+        background-color: #3b5998;
+        margin: auto;
+        width: 95%;
+        margin-bottom: 5px;
+      }
 
+      .btn {
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        border: 1px solid #3b5998;
+        margin: auto;
+        margin-top: 30px;
+      }
+    
+      .google-btn {
+        background-color: #d34836;
+        margin: auto;
+        width: 95%;
+        margin-bottom: 5px;
+      }
+
+      .logo {
+        height: 50%;
+        width: 100%;
+        .logo-icon {
+          text-align: center;
+          font-size: 40px;
+          padding-top: 30%;
+          color: white;
+        }
+      }
+    
 }

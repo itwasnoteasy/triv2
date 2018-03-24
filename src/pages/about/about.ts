@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { HomePage } from '../home/home';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { GameEndedPage } from '../gameEnded/gameEnded';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-about',
@@ -9,8 +12,12 @@ import { HomePage } from '../home/home';
 export class AboutPage {
   private isHosting: boolean;
   private hostEmailAddress: string;
+  private isGameEnded$: any;
+  private isGameEnded: boolean;
+  private hostLabelColor: string = 'primary';
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController,
+    private afDatabase: AngularFireDatabase) {
      this.isHosting = true;
   }
 
@@ -18,11 +25,60 @@ export class AboutPage {
     this.isHosting = false;
   }
 
-  hostMode(mode) {
-    this.navCtrl.push(HomePage, {
-      data: mode,
-      hostEmail: this.hostEmailAddress
-    });
+  private checkGameEnded(mode) {
+    if (this.hostEmailAddress != null && this.hostEmailAddress !== undefined) {
+      var gameKey = this.hostEmailAddress.replace('@', 'at');
+      gameKey = gameKey.replace('.', 'dot');
+      console.log('gameKey' + gameKey);
+      this.isGameEnded$ = this.afDatabase.object(gameKey + 'Game/isGameEnded').valueChanges()
+      .subscribe((isGameEnded: boolean) => {
+          this.isGameEnded = isGameEnded;
+          this.showGamePage(mode);
+        });
+    } else {
+      this.blinkHostLabel();
+    }
   }
 
+  private blinkHostLabel() {
+    this.hostLabelColor = 'danger'; 
+    var blink = setInterval(() => {
+      if(this.hostLabelColor == 'primary') {
+      this.hostLabelColor = 'danger';  
+      } else {
+        this.hostLabelColor = 'primary';  
+      }
+    }, 175);
+
+    setTimeout(() => {
+      clearInterval(blink);
+    }, 1100);
+    
+  }
+
+  hostMode(mode) {
+    if(!mode) {
+      this.checkGameEnded(mode);
+    } else {
+      this.navCtrl.push(HomePage, {
+        data: mode,
+        hostEmail: this.hostEmailAddress
+      });
+    } 
+  }
+
+  showGamePage(mode) {
+    if (!this.isGameEnded) {
+      this.navCtrl.push(HomePage, {
+        data: mode,
+        hostEmail: this.hostEmailAddress
+      });
+    } else {
+      this.navCtrl.push(GameEndedPage, {
+        data: mode,
+        hostEmail: this.hostEmailAddress
+      });
+    }
+    this.isGameEnded$.unsubscribe();
+  }
 }
