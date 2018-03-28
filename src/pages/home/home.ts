@@ -11,7 +11,6 @@ import { AngularFireDatabase } from 'angularfire2/database';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  private userInfo:any;
   public static DELAY=10000;
   private currentQuestionId: Observable<any>;
   private currentQuestion: Observable<any>;
@@ -25,6 +24,7 @@ export class HomePage {
   private chosenColor: string[] = ['','',''];
   private disabledProp = false;
   private gameAnswers: any;
+  private gameKey: string;
   private totalPlayers: number;
   private optionSelectedCount: number[] = [0,0,0];
   private displaySelectionCount: boolean = false;
@@ -35,6 +35,7 @@ export class HomePage {
   private isEliminated: boolean = false;
   private isQuestionEnded: boolean = false;
   private isGameEnded: boolean = false;
+  private userInfo:any;
   private winner: string;
   constructor(public navCtrl: NavController,
     public auth: AuthProvider,
@@ -50,31 +51,24 @@ export class HomePage {
       // console.log(this.hostUserEmail);
       this.hostUserEmail = this.hostUserEmail.replace('@','at');
       this.hostUserEmail = this.hostUserEmail.replace('.','dot');
+      this.gameKey = this.hostUserEmail +'Game';
     }
 
     if (this.userInfo !== null && this.userInfo !== undefined) {
       this.uniqueUserEmail = this.userInfo.email.replace('@', 'at');
       this.uniqueUserEmail = this.uniqueUserEmail.replace('.', 'dot');
 
-      if (this.isHost) {
-        this.hostUserEmail = this.uniqueUserEmail;
-        // Game has begun so clear out all the values and set question = 0
-        this.afDatabase.object('hostUsers/' + this.hostUserEmail + '/currentQuestionId').set(0);
-        this.afDatabase.object(this.hostUserEmail + 'Game/').set('');
-        this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded').set(this.isGameEnded);
-      }
-
-      this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded')
+      this.afDatabase.object(this.gameKey + '/isGameEnded')
         .valueChanges().subscribe((isGameEnded: boolean) => {
           this.isGameEnded = isGameEnded;
         });
 
-      this.afDatabase.object(this.hostUserEmail + 'Game/winner')
+      this.afDatabase.object(this.gameKey + '/winner')
         .valueChanges().subscribe((winner: string) => {
           this.winner = winner;
         }); 
 
-      this.currentQuestionId = this.afDatabase.object('hostUsers/' + this.hostUserEmail + '/currentQuestionId').valueChanges();
+      this.currentQuestionId = this.afDatabase.object(this.gameKey + '/currentQuestionId').valueChanges();
       this.currentQuestionId.subscribe(((cv: number) => {
         if (cv != this.currentQuestionIdVal) {
           this.currentQuestionIdVal = cv;
@@ -86,7 +80,7 @@ export class HomePage {
           this.optionSelectedCount = [0, 0, 0];
           this.chosenColor = ['', '', ''];
           if (this.isHost) {
-            this.afDatabase.object(this.hostUserEmail + 'Game/isQuestionEnded').set(false);
+            this.afDatabase.object(this.gameKey + '/isQuestionEnded').set(false);
           }
           this.currentQuestion = this.afDatabase.object('questions/' + this.currentQuestionIdVal).valueChanges();
           this.currentOptions = this.afDatabase.list('options/' + this.currentQuestionIdVal).valueChanges();
@@ -98,7 +92,7 @@ export class HomePage {
           if (this.currentQuestionIdVal > 0) {
             if (this.currentQuestionIdVal == 1) {
               this.isEliminated = false;
-              this.afDatabase.object(this.hostUserEmail + 'Game/' + this.uniqueUserEmail + '/isEliminated').set(false);
+              this.afDatabase.object(this.gameKey + '/members/' + this.userInfo.uid + '/isEliminated').set(false);
             }
             this.tick = 0;
             var tickIncrement = setInterval(() => {
@@ -115,11 +109,11 @@ export class HomePage {
             // set question ended flag to true after 10 seconds.
             if (this.isHost) {
               setTimeout(() => {
-                this.afDatabase.object(this.hostUserEmail + 'Game/isQuestionEnded').set(true);
+                this.afDatabase.object(this.gameKey + '/isQuestionEnded').set(true);
               }, 10000);
             }
 
-            this.afDatabase.object(this.hostUserEmail + 'Game/isQuestionEnded')
+            this.afDatabase.object(this.gameKey + '/isQuestionEnded')
               .valueChanges().subscribe((qEnded: boolean) => {
                 this.isQuestionEnded = qEnded;
               })
@@ -135,7 +129,7 @@ export class HomePage {
 
       this.setIsLate();
 
-      this.afDatabase.object(this.hostUserEmail + 'Game/').snapshotChanges()
+      this.afDatabase.object(this.gameKey + '/members/').snapshotChanges()
         .subscribe((gameAnswers: any) => {
           if (gameAnswers != null && gameAnswers != undefined) {
             this.gameAnswers = gameAnswers;
@@ -154,23 +148,23 @@ export class HomePage {
       if ((this.answer - 1) == this.chosenOption) {
         this.chosenColor[this.chosenOption] = 'secondary';
         if(this.optionSelectedCount[this.answer-1] == 1) {
-          this.afDatabase.object(this.hostUserEmail + 'Game/winner').set(this.uniqueUserEmail);
-          this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded').set(true);
+          this.afDatabase.object(this.gameKey + '/winner').set(this.uniqueUserEmail);
+          this.afDatabase.object(this.gameKey + '/isGameEnded').set(true);
           this.isGameEnded = true;
         }
       } else {
         this.chosenColor[this.chosenOption] = 'danger';
         this.isEliminated = true;
-        this.afDatabase.object(this.hostUserEmail + 'Game/' + this.uniqueUserEmail + '/isEliminated').set(true);
+        this.afDatabase.object(this.gameKey + '/members/' + this.userInfo.uid  + '/isEliminated').set(true);
       }
     } else if(!this.isEliminated){
       this.isEliminated = true;
-      this.afDatabase.object(this.hostUserEmail + 'Game/' + this.uniqueUserEmail + '/isEliminated').set(true);
+      this.afDatabase.object(this.gameKey + '/members/' + this.userInfo.uid  + '/isEliminated').set(true);
     }  
     // If everyone is eliminated
     if(this.optionSelectedCount[this.answer-1] == 0 && this.isHost) {
-        this.afDatabase.object(this.hostUserEmail + 'Game/winner').set('No Winners');
-        this.afDatabase.object(this.hostUserEmail + 'Game/isGameEnded').set(true);
+        this.afDatabase.object(this.gameKey + '/winner').set('No Winners');
+        this.afDatabase.object(this.gameKey + '/isGameEnded').set(true);
     }
     this.displaySelectionCount = true;
   }
@@ -190,16 +184,16 @@ export class HomePage {
 
   private setIsLate() {
     if (!this.isHost) {
-      var isLate$ = this.afDatabase.object(this.hostUserEmail + 'Game/' + this.uniqueUserEmail + '/isLate')
+      var isLate$ = this.afDatabase.object(this.gameKey + '/members/' + this.userInfo.uid  + '/isLate')
         .valueChanges();
       isLate$.subscribe((_isLateLocal: boolean) => {
         if (_isLateLocal === null || _isLateLocal === undefined) {
           if(this.currentQuestionIdVal > 1) {
-            this.afDatabase.object(this.hostUserEmail + 'Game/' + this.uniqueUserEmail + '/isLate').set(true);
+            this.afDatabase.object(this.gameKey + '/members/' + this.userInfo.uid  + '/isLate').set(true);
             this.isLate = true;
             this.presentAlert('Sorry you are late! You may continue watching the game.');
           } else {
-            this.afDatabase.object(this.hostUserEmail + 'Game/' + this.uniqueUserEmail + '/isLate').set(false);
+            this.afDatabase.object(this.gameKey + '/members/' + this.userInfo.uid  + '/isLate').set(false);
             this.isLate = false;
           } 
         }
@@ -219,12 +213,12 @@ export class HomePage {
     this.olProps[i] = false;
     this.chosenOption = i;
     this.disabledProp = true;
-    this.afDatabase.object(this.hostUserEmail+'Game/'+this.uniqueUserEmail+'/'+currentQ).set((i+1));
+    this.afDatabase.object(this.gameKey+'/members/'+ this.userInfo.uid  +'/'+currentQ).set((i+1));
   }
 
   nextQuestion() {
       if(this.isHost) {
-        this.afDatabase.object('hostUsers/'+this.uniqueUserEmail+'/currentQuestionId')
+        this.afDatabase.object(this.gameKey+'/currentQuestionId')
         .set(this.currentQuestionIdVal+1);
         this.checkStatus = true; 
       };

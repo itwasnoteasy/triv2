@@ -1,0 +1,76 @@
+page-join {
+  .list .item-avatar.list-purple {
+    color: #FFF;
+    background-color: #b31f6f;  
+  }
+  button-balanced:active,
+  button-balanced:focus
+  {
+    border:1.5em solid #00c; /* here change your border */
+    
+  }
+  
+  $background: #fff;
+
+  .btn {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    border: 1px solid #3b5998;
+    margin: auto;
+    margin-top: 30px;
+  }
+  
+  // Basic layout
+  html {
+    background: $background;
+    text-align: center;
+    padding-top: 36px;
+  }
+  body {
+    display: inline-block;
+  }  
+  
+  ion-scroll[scrollX] {
+    white-space: nowrap;
+    height: 120px;
+    overflow: hidden;
+
+    .scroll-item {
+      display: inline-block;
+    }
+
+    .selectable-icon{
+      margin: 10px 20px 10px 20px;
+      color: red;
+      font-size: 100px;
+    }
+
+    ion-avatar div {
+      display:inline-block;
+      position:relative
+    }
+
+    ion-avatar img{
+      margin-right: 60px;
+      margin-left: 15px;
+    }
+
+    ion-avatar label {
+      position: absolute;
+      left: -16px;
+      top: -15px;
+    }
+  }
+
+  ion-scroll[scroll-avatar]{
+    height: 60px;
+  }
+
+  /* Hide ion-content scrollbar */
+  ::-webkit-scrollbar{
+    display:none;
+  }
+}
+    
+    

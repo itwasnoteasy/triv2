@@ -1,0 +1,18 @@
+<ion-content padding>
+  <button color="danger" ion-button block class="btn" (click)="startGame()">
+    &nbsp;Start Game
+  </button>
+    <p text-center>{{members?.length}} Players</p>
+    <ion-row>
+        <ion-item no-lines>
+        <ion-scroll scrollX="true" scroll-avatar>
+            <ion-avatar>
+                <div *ngFor="let member of members">
+              <img src="{{member.image}}" class="scroll-item"/>
+              <label>{{member.name}}</label>
+              </div>
+            </ion-avatar>
+        </ion-scroll>
+        </ion-item>
+      </ion-row>
+</ion-content>

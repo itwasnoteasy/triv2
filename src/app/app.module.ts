@@ -25,6 +25,7 @@ import { AngularFireAuthModule, AngularFireAuthProvider } from 'angularfire2/aut
 import { GooglePlus } from '@ionic-native/google-plus';
 import { AboutPage } from '../pages/about/about';
 import { GameEndedPage } from '../pages/gameEnded/gameEnded';
+import { JoinPage } from '../pages/join/join';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyB_pdGDEb7OuerjJT2gffoIOstB-Yv9HLY",
@@ -44,7 +45,8 @@ export const firebaseConfig = {
     LoginEmailPage,
     SignUpPage,
     TermsOfServicePage,
-    GameEndedPage
+    GameEndedPage,
+    JoinPage
   ],
   imports: [
     BrowserModule,
@@ -65,7 +67,8 @@ export const firebaseConfig = {
     SignUpPage,
     HomePage,
     TermsOfServicePage,
-    GameEndedPage
+    GameEndedPage,
+    JoinPage
   ],
   providers: [
     StatusBar,

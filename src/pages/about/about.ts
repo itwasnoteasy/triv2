@@ -4,6 +4,7 @@ import { HomePage } from '../home/home';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { GameEndedPage } from '../gameEnded/gameEnded';
 import { Observable } from 'rxjs/Observable';
+import { JoinPage } from '../join/join';
 
 @Component({
   selector: 'page-about',
@@ -29,8 +30,8 @@ export class AboutPage {
     if (this.hostEmailAddress != null && this.hostEmailAddress !== undefined) {
       var gameKey = this.hostEmailAddress.replace('@', 'at');
       gameKey = gameKey.replace('.', 'dot');
-      console.log('gameKey' + gameKey);
-      this.isGameEnded$ = this.afDatabase.object(gameKey + 'Game/isGameEnded').valueChanges()
+      gameKey = gameKey +'Game'
+      this.isGameEnded$ = this.afDatabase.object(gameKey + '/isGameEnded').valueChanges()
       .subscribe((isGameEnded: boolean) => {
           this.isGameEnded = isGameEnded;
           this.showGamePage(mode);
@@ -60,10 +61,7 @@ export class AboutPage {
     if(!mode) {
       this.checkGameEnded(mode);
     } else {
-      this.navCtrl.push(HomePage, {
-        data: mode,
-        hostEmail: this.hostEmailAddress
-      });
+      this.navCtrl.push(JoinPage, {});
     } 
   }
 

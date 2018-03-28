@@ -24,7 +24,6 @@ export class AuthProvider {
       this.afAuth.authState.subscribe(authData => {
         if (authData) {
           this.data.object('users/' + authData.uid).subscribe(userData => {
-            //console.log(userData);
             this.user = userData;
             observer.next(userData);
           });
@@ -44,6 +43,7 @@ export class AuthProvider {
         }).then(googleData => {
           console.log(googleData);
           this.afDb.list('users').update(googleData.userId, {
+            uid: googleData.userId,
             name: googleData.displayName,
             email: googleData.email,
             provider: 'google',
@@ -57,6 +57,7 @@ export class AuthProvider {
         const provider = new firebase.auth.GoogleAuthProvider();
         this.afAuth.auth.signInWithPopup(provider).then((googleData) => {
           this.afDb.list('users').update(googleData.user.uid, {
+            uid: googleData.user.uid,
             name: googleData.user.displayName,
             email: googleData.user.email,
             provider: 'google',
