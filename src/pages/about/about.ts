@@ -5,6 +5,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { GameEndedPage } from '../gameEnded/gameEnded';
 import { Observable } from 'rxjs/Observable';
 import { JoinPage } from '../join/join';
+import { AuthProvider } from '../../providers/auth';
 
 @Component({
   selector: 'page-about',
@@ -18,7 +19,8 @@ export class AboutPage {
   private hostLabelColor: string = 'primary';
 
   constructor(public navCtrl: NavController,
-    private afDatabase: AngularFireDatabase) {
+    private afDatabase: AngularFireDatabase,
+    private auth: AuthProvider) {
      this.isHosting = true;
   }
 
@@ -61,13 +63,13 @@ export class AboutPage {
     if(!mode) {
       this.checkGameEnded(mode);
     } else {
-      this.navCtrl.push(JoinPage, {});
+      this.navCtrl.push(JoinPage, {data:mode, hostEmail: this.auth.user.email});
     } 
   }
 
   showGamePage(mode) {
     if (!this.isGameEnded) {
-      this.navCtrl.push(HomePage, {
+      this.navCtrl.push(JoinPage, {
         data: mode,
         hostEmail: this.hostEmailAddress
       });

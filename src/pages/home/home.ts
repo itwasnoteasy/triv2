@@ -16,10 +16,8 @@ export class HomePage {
   private currentQuestion: Observable<any>;
   private currentQuestionIdVal: number = -1;
   private currentOptions: Observable<any[]>;
-  private uniqueUserEmail: string;
   private hostUserEmail: string;
   private isHost: boolean;
-  private checkStatus: boolean;
   private olProps: boolean[]= [true, true, true];
   private chosenColor: string[] = ['','',''];
   private disabledProp = false;
@@ -46,18 +44,8 @@ export class HomePage {
     this.userInfo = auth.user;
     // console.log(auth.user);
     this.isHost = this.navParams.get('data');
-    if(!this.isHost) {
-      this.hostUserEmail = this.navParams.get('hostEmail');
-      // console.log(this.hostUserEmail);
-      this.hostUserEmail = this.hostUserEmail.replace('@','at');
-      this.hostUserEmail = this.hostUserEmail.replace('.','dot');
-      this.gameKey = this.hostUserEmail +'Game';
-    }
-
+    this.gameKey = this.navParams.get('gameKey');
     if (this.userInfo !== null && this.userInfo !== undefined) {
-      this.uniqueUserEmail = this.userInfo.email.replace('@', 'at');
-      this.uniqueUserEmail = this.uniqueUserEmail.replace('.', 'dot');
-
       this.afDatabase.object(this.gameKey + '/isGameEnded')
         .valueChanges().subscribe((isGameEnded: boolean) => {
           this.isGameEnded = isGameEnded;
@@ -88,7 +76,6 @@ export class HomePage {
             .subscribe((ans: number) => {
               this.answer = ans;
             });
-          this.checkStatus = false;
           if (this.currentQuestionIdVal > 0) {
             if (this.currentQuestionIdVal == 1) {
               this.isEliminated = false;
@@ -127,7 +114,7 @@ export class HomePage {
         }
       }));
 
-      this.setIsLate();
+      // this.setIsLate();
 
       this.afDatabase.object(this.gameKey + '/members/').snapshotChanges()
         .subscribe((gameAnswers: any) => {
@@ -148,7 +135,7 @@ export class HomePage {
       if ((this.answer - 1) == this.chosenOption) {
         this.chosenColor[this.chosenOption] = 'secondary';
         if(this.optionSelectedCount[this.answer-1] == 1) {
-          this.afDatabase.object(this.gameKey + '/winner').set(this.uniqueUserEmail);
+          this.afDatabase.object(this.gameKey + '/winner').set(this.userInfo.email);
           this.afDatabase.object(this.gameKey + '/isGameEnded').set(true);
           this.isGameEnded = true;
         }
@@ -175,7 +162,7 @@ export class HomePage {
         var gameAnswers = this.gameAnswers.payload.val();
         this.totalPlayers = this.gameAnswers.payload.numChildren();
         Object.keys(gameAnswers).forEach(key => {
-          if (key !== 'isLate' && key !== 'winner' && key !== 'isQuestionEnded' && key !== 'isGameEnded') {
+          if (key !== 'isLate' && key !== 'winner' && key !== 'isEliminated') {
             this.optionSelectedCount[(gameAnswers[key][this.currentQuestionIdVal] - 1)] += 1;
           }
         });
@@ -220,7 +207,6 @@ export class HomePage {
       if(this.isHost) {
         this.afDatabase.object(this.gameKey+'/currentQuestionId')
         .set(this.currentQuestionIdVal+1);
-        this.checkStatus = true; 
       };
   }
 
