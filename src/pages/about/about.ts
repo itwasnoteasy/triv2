@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { HomePage } from '../home/home';
-import { AngularFireDatabase } from 'angularfire2/database';
-import { GameEndedPage } from '../gameEnded/gameEnded';
-import { Observable } from 'rxjs/Observable';
 import { JoinPage } from '../join/join';
-import { AuthProvider } from '../../providers/auth';
+import { ContactsPage } from '../contacts/contacts';
 
 @Component({
   selector: 'page-about',
@@ -13,43 +9,20 @@ import { AuthProvider } from '../../providers/auth';
 })
 export class AboutPage {
   private isHosting: boolean;
-  private hostEmailAddress: string;
-  private isGameEnded$: any;
-  private isGameEnded: boolean;
-  private hostLabelColor: string = 'primary';
+  private phoneNumber: string;
+  private requiredColor: string = 'primary';
 
-  constructor(public navCtrl: NavController,
-    private afDatabase: AngularFireDatabase,
-    private auth: AuthProvider) {
-     this.isHosting = true;
+  constructor(public navCtrl: NavController) {
+     this.isHosting = false;
   }
 
-  join() {
-    this.isHosting = false;
-  }
-
-  private checkGameEnded(mode) {
-    if (this.hostEmailAddress != null && this.hostEmailAddress !== undefined) {
-      var gameKey = this.hostEmailAddress.replace('@', 'at');
-      gameKey = gameKey.replace('.', 'dot');
-      gameKey = gameKey +'Game'
-      this.isGameEnded$ = this.afDatabase.object(gameKey + '/isGameEnded').valueChanges()
-      .subscribe((isGameEnded: boolean) => {
-          this.isGameEnded = isGameEnded;
-          this.showGamePage(mode);
-        });
-    } else {
-      this.blinkHostLabel();
-    }
-  }
-
-  private blinkHostLabel() {
-    this.hostLabelColor = 'danger'; 
+  private blinkRequired() {
+    this.requiredColor = 'danger'; 
     var blink = setInterval(() => {
-      if(this.hostLabelColor == 'primary') {
-      this.hostLabelColor = 'danger';  
+      if(this.requiredColor == 'primary') {
+      this.requiredColor = 'danger';  
       } else {
-        this.hostLabelColor = 'primary';  
+        this.requiredColor = 'primary';  
       }
     }, 175);
 
@@ -60,25 +33,17 @@ export class AboutPage {
   }
 
   hostMode(mode) {
-    if(!mode) {
-      this.checkGameEnded(mode);
+    if (this.phoneNumber != null 
+      && this.phoneNumber !== undefined 
+      && this.phoneNumber !== ''
+    ) {
+      if (!mode) {
+        this.navCtrl.push(ContactsPage, { data: mode, phoneNumber: this.phoneNumber });
+      } else {
+        this.navCtrl.push(JoinPage, { data: mode, phoneNumber: this.phoneNumber });
+      }
     } else {
-      this.navCtrl.push(JoinPage, {data:mode, hostEmail: this.auth.user.email});
-    } 
-  }
-
-  showGamePage(mode) {
-    if (!this.isGameEnded) {
-      this.navCtrl.push(JoinPage, {
-        data: mode,
-        hostEmail: this.hostEmailAddress
-      });
-    } else {
-      this.navCtrl.push(GameEndedPage, {
-        data: mode,
-        hostEmail: this.hostEmailAddress
-      });
+      this.blinkRequired();
     }
-    this.isGameEnded$.unsubscribe();
   }
 }

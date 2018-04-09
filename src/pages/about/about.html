@@ -1,21 +1,17 @@
 <ion-content padding>
 
-  <button *ngIf="isHosting" ion-button block class="btn" (click)="join()">
+    <ion-item>
+        <ion-label color="{{requiredColor}}" stacked>Phone#</ion-label>
+        <ion-input type="phone" [(ngModel)]="phoneNumber" 
+        [ngModelOptions]="{standalone: true}" placeholder="Phone Number"></ion-input>
+      </ion-item>
+
+  <button ion-button block class="btn" (click)="hostMode(false)">
     &nbsp;Join
   </button>
-  <ion-item *ngIf="!isHosting">
-    <ion-label color="{{hostLabelColor}}" stacked>Host Email address</ion-label>
-    <ion-input type="email" [(ngModel)]="hostEmailAddress" 
-    [ngModelOptions]="{standalone: true}" placeholder="Email address"></ion-input>
-  </ion-item>
-  <ng-container *ngIf="!isHosting">
-      <button color="dark" ion-button block class="btn" (click)="hostMode(false)">
-          &nbsp;Join
-        </button>
-  </ng-container>
 
-  <button *ngIf="isHosting" color="dark" ion-button block class="btn" (click)="hostMode(true)">
-    &nbsp;Host New Game
-  </button>
+    <button color="dark" ion-button block class="btn" (click)="hostMode(true)">
+        &nbsp;Host
+      </button>
 
 </ion-content>

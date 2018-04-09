@@ -3,8 +3,6 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { AuthPage } from '../pages/auth/home/home';
-
 import { DataProvider } from '../providers/data';
 import { AuthProvider } from '../providers/auth';
 import { AboutPage } from '../pages/about/about';
@@ -36,7 +34,7 @@ export class MyApp {
         }
         this.user = data;
       }, err => {
-        this.rootPage = AuthPage;
+        this.rootPage = AboutPage;
       });
     });
   }

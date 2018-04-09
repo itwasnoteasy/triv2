@@ -33,7 +33,9 @@
               </button>
         </div>
     </ng-container>
-    <h1 *ngIf="!isHost && currentQuestionIdVal == 0">Be Ready for Q1.</h1>
+    <button *ngIf="!isHost && currentQuestionIdVal == 0" color="danger" ion-button block class="btn">
+      &nbsp;Be Ready for Q1
+    </button>
 
       <div [class.hide]="!isGameEnded">
         We have a winner: {{winner}}

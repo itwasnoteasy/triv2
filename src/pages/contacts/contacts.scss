@@ -1,0 +1,20 @@
+page-join {
+  .list .item-avatar.list-purple {
+    color: #FFF;
+    background-color: #b31f6f;  
+  }
+  button-balanced:active,
+  button-balanced:focus
+  {
+    border:1.5em solid #00c; /* here change your border */
+    
+  }
+  
+  $background: #fff;
+  button {
+    background: blue;
+    font-size: 5em;
+  }
+}
+    
+    

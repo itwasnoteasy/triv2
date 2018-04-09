@@ -26,6 +26,13 @@ import { GooglePlus } from '@ionic-native/google-plus';
 import { AboutPage } from '../pages/about/about';
 import { GameEndedPage } from '../pages/gameEnded/gameEnded';
 import { JoinPage } from '../pages/join/join';
+import { ContactsPage } from '../pages/contacts/contacts';
+import { Contacts } from '@ionic-native/contacts';
+import { Contact } from '@ionic-native/contacts';
+import {ContactFieldType} from '@ionic-native/contacts';
+import {IContactFindOptions} from '@ionic-native/contacts';
+import { PhoneAuthPage } from '../pages/auth/phoneauth/phoneauth';
+import { Firebase } from '@ionic-native/firebase';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyB_pdGDEb7OuerjJT2gffoIOstB-Yv9HLY",
@@ -34,6 +41,7 @@ export const firebaseConfig = {
   storageBucket: "socal-73dca.appspot.com",
   messagingSenderId: "333331279538"
 };
+
 
 @NgModule({
   declarations: [
@@ -46,7 +54,9 @@ export const firebaseConfig = {
     SignUpPage,
     TermsOfServicePage,
     GameEndedPage,
-    JoinPage
+    JoinPage,
+    ContactsPage,
+    PhoneAuthPage
   ],
   imports: [
     BrowserModule,
@@ -68,17 +78,22 @@ export const firebaseConfig = {
     HomePage,
     TermsOfServicePage,
     GameEndedPage,
-    JoinPage
+    JoinPage,
+    ContactsPage,
+    PhoneAuthPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     GooglePlus,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    Contacts,
     DataProvider,
     AuthProvider,
+    Firebase,
     AngularFireDatabaseProvider,
-    AngularFireAuthProvider
+    AngularFireAuthProvider,
+    Contacts
   ]
 })
 export class AppModule {}

@@ -1,0 +1,17 @@
+<ion-content padding>
+    <button *ngIf="isHosting" color="dark" ion-button block class="btn" (click)="hostMode(true)">
+        &nbsp;Host New Game
+      </button>
+
+    <ion-searchbar (ionInput)="findContact($event)" placeholder="Search"></ion-searchbar>
+    <ion-list [hidden]="!search">
+        <ion-item *ngFor="let contact of contactList">
+          <ion-avatar item-start>
+            <img *ngIf="contact?.photos" [src]="sanitizeImage(contact.photos[0].value)" />
+          </ion-avatar>
+          <p>{{contact?.name?.formatted}} - {{contact?.phoneNumbers[0].value}}
+          </p>
+          <button large ion-button item-end>Join</button>
+        </ion-item>
+      </ion-list>
+</ion-content>
